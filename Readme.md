@@ -21,23 +21,24 @@ npm:
 
 curl (or similar):
 
-    $ curl -# http://github.com/visionmedia/express/raw/master/install.sh | sh
+    $ curl -# http://expressjs.com/install.sh | sh
 
 git clone, first update the submodules:
 
     $ git submodule update --init
     $ make install
-    $ make install-support
 
 ## Features
 
   * Robust routing
   * Redirection helpers
+  * Dynamic view helpers
+  * Content negotiation
   * Focus on high performance
   * View rendering and partials support
   * Environment based configuration
   * Session based flash notifications
-  * Built on [Connect](http://extjs.github.com/Connect)
+  * Built on [Connect](http://github.com/senchalabs/connect)
   * Executable for generating applications quickly
 
 Via Connect:
@@ -59,6 +60,7 @@ The following are the major contributors of Express (in no specific order).
   * TJ Holowaychuk ([visionmedia](http://github.com/visionmedia))
   * Ciaran Jessup ([ciaranj](http://github.com/ciaranj))
   * Aaron Heckmann ([aheckmann](http://github.com/aheckmann))
+  * Guillermo Rauch ([guille](http://github.com/guille))
 
 ## More Information
 

@@ -7,10 +7,6 @@ var express = require('express'),
     connect = require('connect'),
     view = require('express/view');
 
-view.helpers.reverse = function(str){
-    return str.split('').reverse().join('');
-};
-
 module.exports = {
     'test #render()': function(assert){
         var app = express.createServer(connect.errorHandler({ showMessage: true }));
@@ -19,9 +15,6 @@ module.exports = {
 
         app.get('/', function(req, res){
             res.render('index.jade', { layout: false });
-        });
-        app.get('/helpers', function(req, res){
-            res.render('helpers.jade', { layout: false });
         });
         app.get('/jade', function(req, res){
             res.render('index', { layout: false });
@@ -47,9 +40,6 @@ module.exports = {
         assert.response(app,
             { url: '/' },
             { body: '<p>Welcome</p>' });
-        assert.response(app,
-            { url: '/helpers' },
-            { body: '<p>esrever</p>' });
         assert.response(app,
             { url: '/jade' },
             { body: '<p>Welcome</p>' });
@@ -92,12 +82,65 @@ module.exports = {
         app.set('views', __dirname + '/fixtures');
 
         app.get('/', function(req, res){
-            res.render('index.jade', { layout: 'cool.layout.jade' });
+            res.render('index.jade', { layout: 'cool-layout.jade' });
+        });
+        app.get('/no-ext', function(req, res){
+            res.render('index.jade', { layout: 'cool-layout' });
         });
 
         assert.response(app,
             { url: '/' },
             { body: '<cool><p>Welcome</p></cool>' });
+        assert.response(app,
+            { url: '/no-ext' },
+            { body: '<cool><p>Welcome</p></cool>' });
+    },
+    
+    'test #render() specific layout "view engine"': function(assert){
+        var app = express.createServer();
+        app.set('views', __dirname + '/fixtures');
+        app.set('view engine', 'jade');
+        
+        app.get('/', function(req, res){
+            res.render('index', { layout: 'cool-layout' });
+        });
+        
+        assert.response(app,
+            { url: '/' },
+            { body: '<cool><p>Welcome</p></cool>' });
+    },
+    
+    'test #render() view helpers': function(assert){
+        var app = express.createServer();
+        app.set('views', __dirname + '/fixtures');
+
+        app.helpers({ 
+            lastName: 'holowaychuk',
+            foo: function(){
+               return 'bar'; 
+            }
+        });
+
+        var ret = app.dynamicHelpers({
+            session: function(req, res, params){
+                assert.equal('object', typeof req, 'Test dynamic helper req');
+                assert.equal('object', typeof req, 'Test dynamic helper res');
+                assert.equal('object', typeof req, 'Test dynamic helper params');
+                assert.ok(this instanceof express.Server, 'Test dynamic helper app scope');
+                return req.session;
+            }
+        });
+
+        assert.equal(app, ret, 'Server#helpers() is not chainable');
+        
+        app.get('/', function(req, res){
+            req.session = { name: 'tj' };
+            res.render('dynamic-helpers.jade', { layout: false });
+        });
+        
+        assert.response(app,
+            { url: '/' },
+            { body: '<p>tj holowaychuk bar</p>' });
     },
     
     'test #partial()': function(assert){
