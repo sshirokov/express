@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var express = require('./../../lib/express'),
+var express = require('./../../../lib/express'),
     fs = require('fs');
 
 // Export our app as the module
@@ -17,6 +17,15 @@ var posts = JSON.parse(fs.readFileSync(__dirname + '/posts.json', 'utf8'));
 
 // Set our default view engine to "ejs"
 app.set('view engine', 'ejs');
+
+app.dynamicHelpers({
+    basepath: function(){
+        // "this" is the app, we can
+        // dynamically provide the mounted
+        // route to all templates for url usage
+        return this.route;
+    }
+});
 
 app.get('/', function(req, res){
     res.render('index', {

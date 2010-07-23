@@ -19,7 +19,7 @@ npm:
     $ npm install connect
     $ npm install express
 
-curl (or similar):
+curl:
 
     $ curl -# http://expressjs.com/install.sh | sh
 
@@ -27,6 +27,7 @@ git clone, first update the submodules:
 
     $ git submodule update --init
     $ make install
+    $ make install-support
 
 ## Features
 

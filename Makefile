@@ -20,6 +20,14 @@ uninstall: uninstall-docs
 	rm -f $(PREFIX)/bin/express
 	rm -fr $(LIB_PREFIX)/express
 
+install-support:
+	cd support/connect && $(MAKE) install
+	cd support/jade && $(MAKE) install
+
+uninstall-support:
+	cd support/connect && $(MAKE) uninstall
+	cd support/jade && $(MAKE) uninstall
+
 install-docs:
 	cp -f docs/executable.1 $(PREFIX)/share/man/man1/express.1
 
@@ -28,6 +36,7 @@ uninstall-docs:
 
 test:
 	@CONNECT_ENV=test ./support/expresso/bin/expresso \
+		--growl \
 		-I lib \
 		-I support/connect/lib \
 		-I support/haml/lib \
@@ -61,4 +70,4 @@ docs/api.html: lib/express/*.js
 docclean:
 	rm -f docs/*.{1,html}
 
-.PHONY: install uninstall install-docs install-docs uninstall-docs test test-cov docs docclean
+.PHONY: install uninstall install-docs install-support uninstall-support install-docs uninstall-docs test test-cov docs docclean
